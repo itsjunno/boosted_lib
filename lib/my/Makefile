@@ -2,10 +2,29 @@
 ## EPITECH PROJECT, 2025
 ## Makefile
 ## File description:
-## 凸( •̀_•́ )凸
+##
 ##
 
-SRC = $(shell find . -type f -name '*.c')
+SRC =	my_put_unsigned_nbr.c		\
+	handle_unsigned_nbr.c		\
+	handle_nbr.c			\
+	handle_int_hex.c		\
+	handle_f_or_e.c			\
+	handle_nbr.c			\
+	handle_percent.c		\
+	flag_checker.c			\
+	handle_char.c			\
+	my_put_nbr.c			\
+	handle_scientific.c		\
+	my_putstr.c			\
+	handle_string.c			\
+	my_strlen.c			\
+	my_strupcase.c			\
+	my_printf.c			\
+	specifiers_handlers.c		\
+	my_printf_parser.c		\
+	my_putchar.c			\
+	handle_float.c			\
 
 OBJ = $(SRC:.c=.o)
 
@@ -15,16 +34,22 @@ NAME_HEADER = my.h
 
 UNUSED_FLAG = -Wunused-command-line-argument
 
+RM_FLAG = rm -f
+
 all: $(NAME_LIB)
 
 $(NAME_LIB): $(OBJ)
-	clang -c $(OBJ) $(UNUSED_FLAG)
 	ar rc $(NAME_LIB) $(OBJ)
-	cp $(NAME_LIB) ../../
-	cp ../../include/$(NAME_HEADER) .
-	make clean
+	ranlib $(NAME_LIB)
+	cp libmy.a ../../
 
-clean : $(shell rm -f $(OBJ))
-	rm -f $(NAME_HEADER)
+clean:
+	$(RM_FLAG) $(OBJ)
+	$(RM_FLAG) $(NAME_HEADER)
 
-fclean : rm -f ../../$(NAME_LIB)
+fclean: clean
+	$(RM_FLAG) $(NAME_LIB)
+
+re: fclean all
+
+.PHONY: all clean fclean re

@@ -5,13 +5,13 @@
 ## 凸( •̀_•́ )凸
 ##
 
-NAME = test
+NAME = info_file
 
 CC = epiclang
 
 RM = rm -f
 
-SRC = main.c
+SRC = my_bs.c
 
 OBJ = $(SRC:.c=.o)
 
@@ -24,7 +24,6 @@ all: $(NAME)
 $(NAME): $(OBJ)
 	make -C ./lib/my/
 	$(CC) $(OBJ) -o $(NAME) $(LIBFLAG)
-	make clean
 
 %.o: %.c
 	$(CC) -c $< -o $@ $(INCLUDEFLAG)

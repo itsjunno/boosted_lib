@@ -1,36 +1,50 @@
 /*
 ** EPITECH PROJECT, 2025
-** my_printf.c
+** main.c
 ** File description:
-** ᕕ( ᐛ )ᕗ
+** Test printf parser
 */
 
-#include <stdarg.h>
-#include <unistd.h>
-#include <stdbool.h>
-#include "../../include/my_struct.h"
-#include "../../include/my_macro.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "../../include/my.h"
 
-int initialise_struct(struct_data_t *data, const char *format)
+
+static void handle_regular_char(struct_data_t *data, int *pos)
 {
-    data->char_written = 0;
-    my_strcpy(data->fmt_copy, format);
-    return SUCCESS;
+    my_putchar(data->fmt_copy[*pos]);
+    data->char_written++;
+    (*pos)++;
 }
 
-int my_printf(char const *format, ...)
+static void handle_format_specifier(struct_data_t *data, int *pos)
+{
+    int chars = 0;
+
+    if (parse_format(data, pos)) {
+        chars = execute_specifier(data);
+        data->char_written += chars;
+        return;
+    }
+    handle_regular_char(data, pos);
+}
+
+int my_printf(const char *format, ...)
 {
     struct_data_t data;
+    int pos = 0;
 
+    data.fmt_copy = (char *)format;
+    data.char_written = 0;
     va_start(data.ap, format);
-    if (initialise_struct(&data, format))
-        return ERROR;
-    for (; *data.fmt_copy; *data.fmt_copy++) {
-        if (*data.fmt_copy == '%' && format_parser(&data) == true) {
-                return 0;
-        } else {
-            my_putchar(*data.fmt_copy);
-        }
+    while (data.fmt_copy[pos] != '\0') {
+        if (data.fmt_copy[pos] == '%')
+            handle_format_specifier(&data, &pos);
+        else
+            handle_regular_char(&data, &pos);
     }
+    va_end(data.ap);
+    return data.char_written;
 }

@@ -8,7 +8,7 @@
 #include "../../include/my.h"
 #include <unistd.h>
 
-static int length_nb(int nb)
+static int length_nb(unsigned int nb)
 {
     int i = 0;
 
@@ -20,12 +20,8 @@ static int length_nb(int nb)
     return i;
 }
 
-static int cut_number(int nb)
+static int cut_number(unsigned int nb)
 {
-    if (nb <= -2147483648) {
-        write(1, "-2147483648", 11);
-        return 0;
-    }
     if (nb < 0) {
         my_putchar('-');
         cut_number(-nb);
@@ -40,7 +36,7 @@ static int cut_number(int nb)
     return (0);
 }
 
-int my_put_nbr(int nb)
+int my_put_unsigned_nbr(unsigned int nb)
 {
     cut_number(nb);
     return (length_nb(nb));

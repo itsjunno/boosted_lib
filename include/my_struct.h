@@ -7,9 +7,10 @@
 
 #ifndef MY_STRUCT_H_
     #define MY_STRUCT_H_
+    #include <stdbool.h>
+    #include <stdarg.h>
 
-#include <stdbool.h>
-#include <stdarg.h>
+// === struct to hold formatting specifiers ===
 
 typedef struct struct_format {
     bool left_justify;
@@ -22,12 +23,16 @@ typedef struct struct_format {
     int width_value;
 } struct_format_t;
 
+// === struct to hold all useful data ===
+
 typedef struct struct_data {
     char *fmt_copy;
     va_list ap;
     int char_written;
     struct_format_t format;
 } struct_data_t;
+
+// === struct to associate flags to its handler ===
 
 typedef struct struct_flag {
     char specifier;

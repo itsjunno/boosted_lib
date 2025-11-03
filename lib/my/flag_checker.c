@@ -13,25 +13,25 @@ static void assign_flag(struct_data_t *data, int index)
         data->format.left_justify = true;
     }
     if (index == 1) {
-	data->format.plus = true;
+        data->format.plus = true;
     }
     if (index == 2) {
-	data->format.space = true;
+        data->format.space = true;
     }
     if (index == 3) {
-	data->format.hash = true;
+        data->format.hash = true;
     }
     if (index == 4) {
-	data->format.zero_padding = true;
+        data->format.zero_padding = true;
     }
     return;
 }
 
 static bool check_flag(struct_data_t *data, char c)
 {
-    char *flags = {'-', '+', ' ', '\#', '0'};
-    
-    for (int i = 0; flags[i] != '\0'; i++) {
+    char flags[] = {'-', '+', ' ', '#', '0'};
+
+    for (int i = 0; i < 5; i++) {
         if (flags[i] == c) {
             assign_flag(data, i);
             return true;
@@ -44,9 +44,9 @@ bool flag_checker(struct_data_t *data, int *index)
 {
     bool return_value = false;
 
-    for(; data->fmt_copy[*index] != '\0' && ; *index++) {
+    for (; data->fmt_copy[*index] != '\0'; (*index)++) {
         return_value = check_flag(data, data->fmt_copy[*index]);
-        if (return_value == true)
+        if (return_value == false)
             break;
     }
     return return_value;
