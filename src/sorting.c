@@ -21,6 +21,10 @@ int strcasecmp_custom(const char *s1, const char *s2)
     char c1;
     char c2;
 
+    if (*s1 == '.')
+        s1++;
+    if (*s2 == '.')
+        s2++;
     while (*s1 && *s2) {
         c1 = to_lower(*s1);
         c2 = to_lower(*s2);

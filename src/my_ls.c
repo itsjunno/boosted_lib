@@ -11,6 +11,14 @@
 #include "../include/my.h"
 #include "../include/my_ls.h"
 
+void call_functions(char *path, char **entries, int count,
+    ls_options_t *opts)
+{
+    sort_entries(entries, count, opts->reverse);
+    print_all_entry(path, entries, count, opts);
+    free(entries);
+}
+
 void list_directory(char *path, ls_options_t *opts)
 {
     DIR *dir = opendir(path);
@@ -30,9 +38,7 @@ void list_directory(char *path, ls_options_t *opts)
     closedir(dir);
     if (!entries)
         return;
-    sort_entries(entries, count, opts->reverse);
-    print_all_entry(path, entries, count, opts);
-    free(entries);
+    call_functions(path, entries, count, opts);
 }
 
 int main(int argc, char **argv)

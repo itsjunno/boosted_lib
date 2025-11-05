@@ -52,7 +52,7 @@ clean:
 	$(RM_FLAG) $(NAME_HEADER)
 
 fclean: clean
-	$(RM_FLAG) $(NAME_LIB)
+	$(RM_FLAG) $(NAME_LIB) ../../$(NAME_LIB)
 
 re: fclean all
 

@@ -7,6 +7,9 @@
 
 #include "../include/my.h"
 #include "../include/my_ls.h"
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 void set_option(ls_options_t *opts, char flag)
 {
@@ -47,9 +50,26 @@ void parse_options(int argc, char **argv, ls_options_t *opts)
     }
 }
 
+bool count_directory(int argc, char **argv)
+{
+    struct stat stat_path;
+    int count = 0;
+
+    for (int i = 0; i <= argc; i++) {
+        if (S_ISDIR(stat_path.st_mode))
+            count++;
+    }
+    if (count > 1) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 void process_arguments(int argc, char **argv, ls_options_t *opts)
 {
     int i = 1;
+    bool multiple_dir = count_directory(argc, argv);
 
     for (i = 1; i < argc; i++) {
         if (argv[i][0] != '-')
