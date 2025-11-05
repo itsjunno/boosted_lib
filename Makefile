@@ -2,44 +2,46 @@
 ## EPITECH PROJECT, 2025
 ## Makefile
 ## File description:
-## 凸( •̀_•́ )凸
+## Makefile for my_ls
 ##
 
-NAME = info_file
+NAME = my_ls
 
 CC = epiclang
 
+CFLAGS = -Wall -Wextra
+
 RM = rm -f
 
-SRC = my_bs.c
+SRC_DIR = ./src
+
+SRC = $(wildcard $(SRC_DIR)/*.c)
 
 OBJ = $(SRC:.c=.o)
 
-LIBFLAG = -L./lib/my/ -lmy
+LIB_DIR = ./lib/my
+
+LIBFLAG = -L$(LIB_DIR) -lmy
 
 INCLUDEFLAG = -I./include
 
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	make -C ./lib/my/
+	make -C $(LIB_DIR)
 	$(CC) $(OBJ) -o $(NAME) $(LIBFLAG)
 
 %.o: %.c
-	$(CC) -c $< -o $@ $(INCLUDEFLAG)
+	$(CC) $(CFLAGS) $(INCLUDEFLAG) -c $< -o $@
 
 clean:
 	$(RM) $(OBJ)
+	make -C $(LIB_DIR) clean
 
 fclean: clean
 	$(RM) $(NAME)
-	$(RM) libmy.a
+	make -C $(LIB_DIR) fclean
 
 re: fclean all
 
 .PHONY: all clean fclean re
-
-tests_run:
-	gcc -o tests_cat ../tests/tests_cat.c -lcriterion --coverage
-	./tests_cat
-	rm -f tests_cat

@@ -25,6 +25,10 @@ SRC =	my_put_unsigned_nbr.c		\
 	my_printf_parser.c		\
 	my_putchar.c			\
 	handle_float.c			\
+	my_strcmp.c			\
+	my_strdup.c			\
+	my_strcpy.c			\
+	my_strcat.c			\
 
 OBJ = $(SRC:.c=.o)
 
