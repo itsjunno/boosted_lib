@@ -36,5 +36,7 @@ void parse_flags(char *arg, ls_options_t *opts);
 void parse_options(int argc, char **argv, ls_options_t *opts);
 void process_arguments(int argc, char **argv, ls_options_t *opts);
 void list_directory_recursive(char *path, ls_options_t *opts, bool first);
+void sort_by_time(char *path, char **entries, int count, bool reverse);
+
 
 #endif

@@ -23,7 +23,7 @@ static bool is_directory(char *path)
 {
     struct stat sb;
 
-    if (lstat(path, &sb) == -1)
+    if (stat(path, &sb) == -1)
         return false;
     return S_ISDIR(sb.st_mode);
 }
@@ -37,8 +37,10 @@ static void build_full_path(char *dest, char *dir, char *name)
         dest[i] = dir[i];
         i++;
     }
-    dest[i] = '/';
-    i++;
+    if (i > 0 && dest[i - 1] != '/') {
+        dest[i] = '/';
+        i++;
+    }
     while (name[j]) {
         dest[i] = name[j];
         i++;
@@ -47,13 +49,51 @@ static void build_full_path(char *dest, char *dir, char *name)
     dest[i] = '\0';
 }
 
+static void process_entry(char *entry, char *path, ls_options_t *opts)
+{
+    char full_path[1024];
+
+    if (!is_special_dir(entry)) {
+        build_full_path(full_path, path, entry);
+        if (is_directory(full_path)) {
+            list_directory_recursive(full_path, opts, false);
+        }
+    }
+}
+
+static void process_entries(char **entries, int count,
+    char *path, ls_options_t *opts)
+{
+    for (int i = 0; i < count; i++) {
+        process_entry(entries[i], path, opts);
+        free(entries[i]);
+    }
+}
+
+static char **get_sorted_entries(char *path, ls_options_t *opts, int *count)
+{
+    DIR *dir = opendir(path);
+    char **entries;
+
+    if (!dir)
+        return NULL;
+    *count = count_entries(dir, opts->show_hidden);
+    closedir(dir);
+    dir = opendir(path);
+    if (!dir)
+        return NULL;
+    entries = read_entries(dir, opts->show_hidden, *count);
+    closedir(dir);
+    if (!entries)
+        return NULL;
+    sort_entries(entries, *count, opts->reverse);
+    return entries;
+}
+
 void list_directory_recursive(char *path, ls_options_t *opts, bool first)
 {
-    DIR *dir;
     char **entries;
     int count;
-    int i = 0;
-    char full_path[1024];
 
     if (!first) {
         my_printf("\n%s:\n", path);
@@ -61,26 +101,9 @@ void list_directory_recursive(char *path, ls_options_t *opts, bool first)
     list_directory(path, opts);
     if (!opts->recursive)
         return;
-    dir = opendir(path);
-    if (!dir)
-        return;
-    count = count_entries(dir, opts->show_hidden);
-    closedir(dir);
-    dir = opendir(path);
-    if (!dir)
-        return;
-    entries = read_entries(dir, opts->show_hidden, count);
-    closedir(dir);
+    entries = get_sorted_entries(path, opts, &count);
     if (!entries)
         return;
-    sort_entries(entries, count, opts->reverse);
-    for (i = 0; i < count; i++) {
-        if (!is_special_dir(entries[i])) {
-            build_full_path(full_path, path, entries[i]);
-            if (is_directory(full_path))
-                list_directory_recursive(full_path, opts, false);
-        }
-        free(entries[i]);
-    }
+    process_entries(entries, count, path, opts);
     free(entries);
 }

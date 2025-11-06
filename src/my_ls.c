@@ -11,14 +11,6 @@
 #include "../include/my.h"
 #include "../include/my_ls.h"
 
-void call_functions(char *path, char **entries, int count,
-    ls_options_t *opts)
-{
-    sort_entries(entries, count, opts->reverse);
-    print_all_entry(path, entries, count, opts);
-    free(entries);
-}
-
 void list_directory(char *path, ls_options_t *opts)
 {
     DIR *dir = opendir(path);
@@ -38,7 +30,9 @@ void list_directory(char *path, ls_options_t *opts)
     closedir(dir);
     if (!entries)
         return;
-    call_functions(path, entries, count, opts);
+    sort_entries(entries, count, opts->reverse);
+    print_all_entry(path, entries, count, opts);
+    free(entries);
 }
 
 int main(int argc, char **argv)
@@ -47,11 +41,17 @@ int main(int argc, char **argv)
 
     parse_options(argc, argv, &opts);
     if (argc == 1) {
-        list_directory(".", &opts);
+        if (opts.recursive)
+            list_directory_recursive(".", &opts, true);
+        else
+            list_directory(".", &opts);
         return 0;
     }
     if (argv[1][0] == '-' && argc == 2) {
-        list_directory(".", &opts);
+        if (opts.recursive)
+            list_directory_recursive(".", &opts, true);
+        else
+            list_directory(".", &opts);
         return 0;
     }
     process_arguments(argc, argv, &opts);
