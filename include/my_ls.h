@@ -35,5 +35,6 @@ void set_option(ls_options_t *opts, char flag);
 void parse_flags(char *arg, ls_options_t *opts);
 void parse_options(int argc, char **argv, ls_options_t *opts);
 void process_arguments(int argc, char **argv, ls_options_t *opts);
+void list_directory_recursive(char *path, ls_options_t *opts, bool first);
 
 #endif
