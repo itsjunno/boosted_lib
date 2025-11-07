@@ -7,9 +7,6 @@
 
 #include "../include/my.h"
 #include "../include/my_ls.h"
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
 
 void set_option(ls_options_t *opts, char flag)
 {
@@ -23,6 +20,8 @@ void set_option(ls_options_t *opts, char flag)
         opts->recursive = true;
     if (flag == 't')
         opts->sort_by_time = true;
+    if (flag == 'd')
+        opts->show_dir = true;
 }
 
 void parse_flags(char *arg, ls_options_t *opts)
@@ -44,35 +43,32 @@ void parse_options(int argc, char **argv, ls_options_t *opts)
     opts->reverse = false;
     opts->recursive = false;
     opts->sort_by_time = false;
+    opts->show_dir = false;
     for (i = 1; i < argc; i++) {
         if (argv[i][0] == '-')
             parse_flags(argv[i], opts);
     }
 }
 
-bool count_directory(int argc, char **argv)
+static int process_single_arg(char *arg, ls_options_t *opts)
 {
-    struct stat stat_path;
-    int count = 0;
-
-    for (int i = 0; i <= argc; i++) {
-        if (S_ISDIR(stat_path.st_mode))
-            count++;
-    }
-    if (count > 1) {
-        return true;
-    } else {
-        return false;
-    }
+    if (opts->recursive)
+        return list_directory_recursive(arg, opts, true);
+    else
+        return list_directory(arg, opts);
 }
 
-void process_arguments(int argc, char **argv, ls_options_t *opts)
+int process_arguments(int argc, char **argv, ls_options_t *opts)
 {
     int i = 1;
-    bool multiple_dir = count_directory(argc, argv);
+    int return_value = 0;
+    int check_value = 0;
 
     for (i = 1; i < argc; i++) {
         if (argv[i][0] != '-')
-            list_directory(argv[i], opts);
+            return_value = process_single_arg(argv[i], opts);
+        if (return_value == 84)
+            check_value = 84;
     }
+    return check_value;
 }

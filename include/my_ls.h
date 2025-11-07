@@ -8,6 +8,7 @@
 #ifndef MY_LS_H_
     #define MY_LS_H_
     #include <stdbool.h>
+    #include <sys/types.h>
 
 // === Structure to hold ls options ===
 
@@ -17,6 +18,7 @@ typedef struct ls_options {
     bool reverse;          // -r flag
     bool recursive;        // -R flag
     bool sort_by_time;     // -t flag
+    bool show_dir;         // -d flag
 } ls_options_t;
 
 /* Function declarations */
@@ -30,12 +32,12 @@ char **read_entries(DIR *dir, bool show_hidden, int count);
 void print_entry(char *path, char *name, bool long_format);
 void free_entries(char **entries, int count);
 void print_all_entry(char *path, char **entries, int count, ls_options_t *opts);
-void list_directory(char *path, ls_options_t *opts);
+int list_directory(char *path, ls_options_t *opts);
 void set_option(ls_options_t *opts, char flag);
 void parse_flags(char *arg, ls_options_t *opts);
 void parse_options(int argc, char **argv, ls_options_t *opts);
-void process_arguments(int argc, char **argv, ls_options_t *opts);
-void list_directory_recursive(char *path, ls_options_t *opts, bool first);
+int process_arguments(int argc, char **argv, ls_options_t *opts);
+int list_directory_recursive(char *path, ls_options_t *opts, bool first);
 void sort_by_time(char *path, char **entries, int count, bool reverse);
 
 

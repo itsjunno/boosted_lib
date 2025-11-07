@@ -12,8 +12,7 @@
 void print_time_formatted(time_t mtime)
 {
     char *time_str = ctime(&mtime);
-    int i = 4;
 
-    for (i = 4; i < 16; i++)
+    for (int i = 4; i < 16; ++i)
         my_putchar(time_str[i]);
 }

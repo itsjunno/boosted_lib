@@ -7,6 +7,7 @@
 
 #include "../include/my.h"
 #include "../include/my_ls.h"
+#include "../include/my_macro.h"
 #include <sys/stat.h>
 #include <stdlib.h>
 
@@ -90,7 +91,7 @@ static char **get_sorted_entries(char *path, ls_options_t *opts, int *count)
     return entries;
 }
 
-void list_directory_recursive(char *path, ls_options_t *opts, bool first)
+int list_directory_recursive(char *path, ls_options_t *opts, bool first)
 {
     char **entries;
     int count;
@@ -100,10 +101,11 @@ void list_directory_recursive(char *path, ls_options_t *opts, bool first)
     }
     list_directory(path, opts);
     if (!opts->recursive)
-        return;
+        return ERROR;
     entries = get_sorted_entries(path, opts, &count);
     if (!entries)
-        return;
+        return ERROR;
     process_entries(entries, count, path, opts);
     free(entries);
+    return SUCCESS;
 }

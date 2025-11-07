@@ -32,7 +32,7 @@ static void print_group_execute(mode_t mode)
 
 static void print_other_execute(mode_t mode)
 {
-    if (mode & S_ISVTX)
+    if (mode & __S_ISVTX)
         my_putchar((mode & S_IXOTH) ? 't' : 'T');
     else
         my_putchar((mode & S_IXOTH) ? 'x' : '-');
