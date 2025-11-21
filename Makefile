@@ -1,47 +1,36 @@
 ##
 ## EPITECH PROJECT, 2025
-## Makefile
+## my_hunter
 ## File description:
-## Makefile for my_ls
+## Makefile for my_hunter project
 ##
 
-NAME = my_ls
+SRC	=	src/main.c		\
+		src/init.c		\
+		src/game_loop.c	\
+		src/duck.c		\
+		src/gun.c		\
+		src/cleanup.c
 
-CC = epiclang
+OBJ	=	$(SRC:.c=.o)
 
-CFLAGS = -Wall -Wextra
+NAME	=	my_hunter
 
-RM = rm -f
+CFLAGS	=	-Wall -Wextra -I.
 
-SRC_DIR = ./src
+LDFLAGS	=	-lcsfml-graphics -lcsfml-window -lcsfml-system -lcsfml-audio -lm
 
-SRC = $(wildcard $(SRC_DIR)/*.c)
+all:	$(NAME)
 
-OBJ = $(SRC:.c=.o)
-
-LIB_DIR = ./lib/my
-
-LIBFLAG = -L$(LIB_DIR) -lmy
-
-INCLUDEFLAG = -I./include
-
-all: $(NAME)
-
-$(NAME): $(OBJ)
-	make -C $(LIB_DIR)
-	$(CC) $(OBJ) -o $(NAME) $(LIBFLAG)
-
-%.o: %.c
-	$(CC) $(CFLAGS) $(INCLUDEFLAG) -c $< -o $@
+$(NAME):	$(OBJ)
+	gcc -o $(NAME) $(OBJ) $(LDFLAGS)
 
 clean:
-	$(RM) $(OBJ)
-	make -C $(LIB_DIR) clean
+	rm -f $(OBJ)
 
-fclean: clean
-	$(RM) $(NAME)
-	make -C $(LIB_DIR) fclean
+fclean:	clean
+	rm -f $(NAME)
 
-re: fclean all
+re:	fclean all
 
-.PHONY: all clean fclean re
+.PHONY:	all clean fclean re
